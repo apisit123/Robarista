@@ -4,7 +4,7 @@ About the LINE Messaging API
 See the official API documentation for more information.
 > **English** : https://developers.line.me/en/docs/
 
-![alt text](https://imgur.com/kFEb3it)
+![alt text](https://www.picz.in.th/images/2018/02/12/DSCF2901.jpg)
 
 
 Documents
@@ -94,3 +94,7 @@ Make some changes to the code you just cloned and deploy them to Heroku using Gi
 >$ git add .
 >$ git commit -am "make it better"
 >$ git push heroku master
+
+
+**More Information**
+> http://blog.redlinesoft.net/?p=3600
