@@ -1,17 +1,17 @@
-﻿About the LINE Messaging API
+About the LINE Messaging API
 ===================
 
 See the official API documentation for more information.
 > **English** : https://developers.line.me/en/docs/
 
-----------
+--
 	Documents
--------------
+-----
 
 ###Create Line Bot
 > https://nuuneoi.com/blog/blog.php?read_id=882 
 
-----------
+---------
 
 ###Line-Bot-SDK-php
 
