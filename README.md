@@ -4,7 +4,7 @@ About the LINE Messaging API
 See the official API documentation for more information.
 > **English** : https://developers.line.me/en/docs/
 
-![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+![alt text](https://imgur.com/kFEb3it)
 
 
 Documents
