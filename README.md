@@ -5,8 +5,8 @@ See the official API documentation for more information.
 > **English** : https://developers.line.me/en/docs/
 
 
-#Documents
-
+Documents
+===================
 
 Create Line Bot
 -----
@@ -17,6 +17,7 @@ Line-Bot-SDK-php
 -----
 
 Installation
+-----
 
 - Install the LINE Messaging API SDK using Composer.
 >$ composer require linecorp/line-bot-sdk
@@ -47,8 +48,7 @@ $response = $bot->replyText('< reply token >', 'hello!');
 - A more advanced example:
 
 ```
-$textMessageBuilder = new LINE\LINEBot\MessageBuilder\TextMessage
-Builder('hello');
+$textMessageBuilder = new LINE\LINEBot\MessageBuilder\TextMessageBuilder('hello');
 
 $response = $bot->replyMessage('<reply token>',$textMessageBuilder);
 if ($response->isSucceeded()) {
@@ -66,7 +66,8 @@ LINEBot #replyMessage() takes the reply token and MessageBuilder.
 The method sends a message that is built by MessageBuilder to the destination.
 
 
-#Push Code to Heroku
+##Push Code to Heroku
+-----
 
 Install the Heroku CLI
 -----
