@@ -1,0 +1,397 @@
+MODULE MainModule
+    !(0)Variable ########################################################
+    VAR socketdev server_socket;
+    VAR socketdev client_socket;
+    PERS bool order:=TRUE;
+    PERS num dCapsule;
+
+    VAR num Coffee_Americano;
+    VAR num Coffee_Esspresso;
+    VAR num Coffee_LatteMacchiato;
+    VAR num Coffee_Chococino;
+    VAR num Coffee_Greentea;
+    VAR num pCapsule_Counter;
+    VAR num simcounter;
+
+    VAR string str_data;
+    VAR string order_data;
+    PERS string transfer_order;
+    VAR string finish_data;
+
+    VAR num nRow;
+    VAR num nColumn;
+    VAR num zDiff;
+
+    VAR bool testmode;
+
+    VAR syncident sync1;
+    VAR syncident sync2;
+    VAR syncident sync3;
+    VAR syncident sync4;
+
+    CONST robtarget homeL:=[[266.64,89.54,300.42],[0.161141973,-0.254767957,-0.081031186,0.950031841],[-1,2,2,1010],[113.247,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL10:=[[557.67,377.03,244.85],[0.0453828,0.00554018,0.998861,-0.0136421],[-1,3,3,11],[141.725,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL20:=[[245.16,290.7,325.88],[0.020319998,-0.209380984,-0.936470929,-0.280657979],[0,0,2,11],[147.887,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    CONST robtarget Americano:=[[43.80,42.17,45.65],[0.0101666,-0.764321,-0.644755,-0.00140533],[0,0,2,11],[172.431,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget Espressso:=[[102.09,43.71,48.23],[0.000205072,0.721568,0.692335,0.00323779],[0,0,2,11],[174.309,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget LatteM:=[[164.19,39.56,49.68],[0.008303151,-0.708908103,-0.705185103,-0.009712341],[0,0,2,11],[-175.251,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget Chocochino:=[[224.93,40.83,46.03],[0.035861196,-0.699628916,-0.713583915,-0.005599169],[0,0,2,11],[-160.09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget Greentea:=[[284.02,45.42,47.89],[0.017839798,-0.705036925,-0.708667925,-0.019860698],[0,0,2,11],[-149.765,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    Pers robtarget homeL30x:=[[102.09,283.71,48.23],[0.000205072,0.721568,0.692335,0.00323779],[0,0,2,11],[174.309,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL40:=[[451.69,71.41,276.91],[0.011314305,-0.467813227,-0.883080428,0.034521417],[-1,3,2,11],[179.064,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL50:=[[451.68,71.42,357.27],[0.011338802,-0.467801062,-0.883087118,0.034507105],[-1,3,2,11],[-173.224,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL60:=[[478.83,347.19,237.70],[0.0306816,0.0486114,-0.717526,-0.694156],[-1,1,2,1010],[130.745,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL70:=[[476.97,351.25,299.14],[0.026940093,0.043288689,-0.728844813,-0.682777825],[-1,0,2,1010],[130.831,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL80:=[[372.53,11.48,345.75],[0.329658898,-0.303779906,0.111156965,0.886953724],[-1,1,2,1010],[139.373,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL90:=[[345.04,-281.40,143.01],[0.479051,-0.475203,-0.501026,0.541908],[-2,2,2,1010],[167.556,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL100:=[[345.14,-167.02,153.36],[0.478389137,-0.475521136,-0.500946144,0.542288155],[-1,2,2,1010],[167.454,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL110:=[[501.02,69,196.96],[0.405344117,-0.422747122,-0.550320158,0.595087171],[-1,2,2,1010],[160.747,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL120:=[[501.08,69.04,269.31],[0.405117869,-0.423001863,-0.550045822,0.595313808],[-1,2,2,1010],[160.73,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL130:=[[500.64,79.39,199.54],[0.400981074,-0.420960078,-0.556425103,0.59363111],[-1,2,2,1010],[160.596,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL140:=[[344.96,-273.19,127.72],[0.479246852,-0.475140853,-0.500979845,0.541832833],[-2,2,2,1010],[167.596,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL150:=[[344.95,-177.74,127.72],[0.479256098,-0.475147098,-0.500969103,0.541829111],[-1,2,2,1010],[167.598,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL160:=[[345.04,-273.22,157.08],[0.479051739,-0.475198741,-0.501032727,0.541905705],[-2,2,2,1010],[167.556,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL170:=[[495.85,79.29,290.15],[0.402044313,-0.420108327,-0.555786432,0.594113462],[-1,2,2,1010],[160.692,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL180:=[[361.65,79.3,290.13],[0.402143168,-0.420016175,-0.555714232,0.594179248],[-1,2,2,1010],[160.698,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL190:=[[358.03,-35.69,214.6],[0.403838914,-0.495537895,-0.522779889,0.56396588],[-1,2,2,1010],[159.857,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL200:=[[682.16,-15.32,235],[0.025535688,0.337905845,0.940483569,0.025655888],[-1,3,2,11],[178.91,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL210:=[[524.14,-101.96,277.55],[0.046974592,0.578392896,0.813300854,-0.042388292],[-1,3,2,11],[169.987,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL220:=[[682.06,-15.46,184.83],[0.025502891,0.338110882,0.940413671,0.025549191],[-1,3,2,11],[-179.299,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL230:=[[550.88,53.26,399.54],[0.08655928,-0.47555189,-0.47760089,0.733658831],[-1,3,2,1010],[103.788,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    TASK PERS wobjdata wobj_Capsule:=[FALSE,TRUE,"",[[78.221,304.093,122.593],[0.968448703,0.249189924,0.00103593,0.003227779]],[[0,0,0],[1,0,0,0]]];
+    CONST robtarget homeL30:=[[218.97,225.49,244.6],[0.216307102,-0.471700223,-0.847657401,-0.110395052],[0,0,2,11],[177.509,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL240:=[[526.30,16.72,353.22],[0.244835,0.3021,0.701729,-0.596965],[-2,3,2,1010],[80.0563,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL250:=[[448.29,75.87,449.64],[0.082170422,-0.470895125,-0.163074043,0.863083229],[-1,2,2,1010],[110.072,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeL260:=[[376.37,38.98,366.98],[0.0186891,0.413122,-0.11358,-0.903372],[-1,2,2,1010],[94.4113,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    PROC main()
+        !(1)Initial Condition############################################        
+        MoveJ homeL,v50,fine,Vacuum1L;
+        g_Init\Calibrate;
+        g_GripIn;
+        rCameraInit;
+        dCapsule:=0;
+        Coffee_Americano:=0;
+        Coffee_Esspresso:=0;
+        Coffee_LatteMacchiato:=0;
+        Coffee_Chococino:=0;
+        Coffee_Greentea:=0;
+        pCapsule_Counter:=1;
+        testmode:=FALSE;
+        simcounter:=0;
+        !testmode:=TRUE;
+
+        !(2)Connect LINE API ############################################
+        IF NOT testmode THEN
+            SocketCreate server_socket;
+            SocketBind server_socket,"192.168.0.5",1025;
+            SocketListen server_socket;
+            Reconnect:
+            TPWrite "Waiting Client";
+            TPWrite "Waitng....";
+            TPWrite "########...10%";
+            SocketAccept server_socket,client_socket;
+            SocketReceive client_socket\Str:=str_data;
+            TPWrite "String from LINE-API:"+str_data;
+            TPWrite "Connected.";
+            TPWrite "###########100%";
+            IF str_data="Hello Yumi" THEN
+                SocketSend client_socket\Str:="Hello Python";
+                SocketReceive client_socket\Str:=str_data;
+                TPWrite str_data;
+                TPWrite " > Running...";
+            ENDIF
+        ENDIF
+
+        WHILE TRUE DO
+            !(3)Waiting For Signal ##########################################
+            IF NOT testmode THEN
+                SocketSend client_socket\Str:="order";
+                SocketReceive client_socket\Str:=order_data;
+                TPWrite order_data;
+                WaitTime 0.2;
+            ELSE
+                !testing mode
+                simcounter:=simcounter+1;
+                IF simcounter<=6 THEN
+                    order_data:="AMERICANO";
+                ELSEIF simcounter<=12 THEN
+                    order_data:="ESPRESSO";
+                ELSEIF simcounter<=15 THEN
+                    order_data:="LATTE MACCHIATO";
+                ELSEIF simcounter<=18 THEN
+                    order_data:="CHOCOCINO";
+                ELSEIF simcounter<=21 THEN
+                    order_data:="GREEN TEA";
+                ELSE
+                    simcounter:=0;
+                ENDIF
+
+            ENDIF
+
+            transfer_order:=order_data;
+            !##Recheck String & Turn On Function#############################
+            IF order_data="AMERICANO" OR order_data="ESPRESSO" THEN
+                order:=TRUE;
+                dCapsule:=1;
+
+            ELSEIF order_data="LATTE MACCHIATO" OR order_data="CHOCOCINO" OR order_data="GREEN TEA" THEN
+                order:=TRUE;
+                dCapsule:=2;
+            ELSE
+                !No ORDER
+                order:=FALSE;
+                dCapsule:=0;
+                TPWrite "Wainting Order...";
+                WaitTime 1;
+            ENDIF
+
+            WHILE order DO
+                !(4)Yumi Working ############################################
+                MoveJ homeL,v50,fine,Vacuum1L;
+                WaitSyncTask sync1,YuMi_App_task_list;
+                WaitTime 0.23;
+
+                ![1]Call..........WaitSyncTask 2&3...........................               
+                CapsulePick;
+                WaitTime 0.23;
+
+                ![2]Call.....................................................
+                Cup2Machine;
+                WaitTime 0.23;
+
+                ![3]Call...........WaitSyncTask 2&3..........................
+                IF dCapsule=2 THEN
+                    CapsulePick;
+                    WaitTime 0.63;
+                ENDIF
+
+                ![4]Call.........WaitSyncTask 4............................
+                !SouvenirPick;
+                WaitTime 0.23;
+
+                ![5]Call...................................................
+                Ready2Serve;
+                WaitTime 0.23;
+                
+                !(5)Send Finish #############################################
+                SocketSend client_socket\Str:="finish";
+                SocketReceive client_socket\Str:=finish_data;
+                TPWrite finish_data;
+                WaitTime 0.2;
+                order:=FALSE;
+                order_data:="no order";
+                dCapsule:=0;
+            ENDWHILE
+        ENDWHILE
+
+    ERROR
+        !####Timeout Connect ###########################################################
+        IF ERRNO=ERR_SOCK_TIMEOUT THEN
+            RETRY;
+        ELSEIF ERRNO=ERR_SOCK_CLOSED THEN
+            SocketClose server_socket;
+            SocketClose client_socket;
+            WaitTime 0.5;
+            SocketCreate server_socket;
+            SocketBind server_socket,"192.168.0.5",1025;
+            SocketListen server_socket;
+            SocketAccept server_socket,client_socket;
+            RETRY;
+        ELSE
+            ! No error recovery handling
+        ENDIF
+
+    ENDPROC
+
+
+    PROC Cup2Machine()
+        MoveL homeL40,v50,fine,Vacuum1L;
+        WaitTime 0.23;
+        g_MoveTo 15;
+        MoveJ homeL70,v200,fine,Vacuum1L;
+        MoveL homeL60,v50,fine,Vacuum1L;
+        g_GripIn;
+        WaitTime 0.2;
+        MoveL homeL70,v50,fine,Vacuum1L;
+        MoveJ homeL80,v300,z10,Vacuum1L;
+        MoveJ homeL100,v50,fine,Vacuum1L;
+        MoveL homeL90,v50,fine,Vacuum1L;
+        WaitTime 0.5;
+        g_MoveTo 15;
+        WaitTime 1;
+        MoveL homeL140,v50,fine,Vacuum1L;
+        MoveL homeL150,v50,fine,Vacuum1L;
+        MoveJ homeL100,v50,fine,Vacuum1L;
+        MoveJ homeL,v200,fine,Vacuum1L;
+    ENDPROC
+
+    PROC Ready2Serve()
+        WaitSyncTask sync4,YuMi_App_task_list;
+        MoveJ homeL,v200,fine,Vacuum1L;
+        g_MoveTo 18;
+        MoveJ homeL100,v50,fine,Vacuum1L;
+        MoveL homeL90,v50,fine,Vacuum1L;
+        g_GripIn;
+        WaitTime 0.5;
+        MoveL homeL160,v50,fine,Vacuum1L;
+        MoveL homeL100,v50,fine,Vacuum1L;
+        MoveJ homeL190,v50,fine,Vacuum1L;
+        MoveJ homeL120,v50,fine,Vacuum1L;
+        MoveL homeL110,v50,fine,Vacuum1L;
+        g_MoveTo 18;
+        MoveL homeL130,v50,fine,Vacuum1L;
+        MoveL homeL170,v50,fine,Vacuum1L;
+        MoveJ homeL180,v50,fine,Vacuum1L;
+        WaitTime 0.23;
+        g_MoveTo 18;
+        WaitTime 0.23;
+        MoveJ homeL,v200,fine,Vacuum1L;
+    ENDPROC
+
+    PROC SouvenirPick()
+        MoveJ homeL,v200,fine,Vacuum1L;
+        MoveJ homeL250,v200,fine,Vacuum1L;
+        WaitTime 2;
+        IF order_data="AMERICANO" THEN
+            WaitTime 2;
+        ENDIF
+        MoveToDetectedObject;
+        MoveJ homeL210,v200,z10,Vacuum1L;
+        MoveJ homeL200,v200,fine,Vacuum1L;
+        MoveJ homeL220,v200,fine,Vacuum1L;
+        g_VacuumOff1;
+        MoveJ homeL200,v200,fine,Vacuum1L;
+        MoveJ homeL230,v200,fine,Vacuum1L;
+        MoveJ homeL,v200,fine,Vacuum1L;
+    ENDPROC
+
+    PROC CapsulePick()
+        nColumn:=60;
+        nRow:=60;
+        zDiff:=-52;
+        MoveJ homeL,v200,fine,Vacuum1L;
+        MoveJ homeL20,v200,z30,Vacuum1L;
+        MoveJ homeL30,v200,z30,Vacuum1L;
+        IF order_data="AMERICANO" THEN
+            homeL30x:=Offs(Americano,0,nRow*Coffee_Americano,0);
+            MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+            MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+            WaitTime 0.23;
+            g_VacuumOn1;
+            MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+            MoveL Americano,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+            Coffee_Americano:=Coffee_Americano+1;
+            IF Coffee_Americano>5 THEN
+                Coffee_Americano:=0;
+            ENDIF
+        ELSEIF order_data="ESPRESSO" THEN
+            homeL30x:=Offs(Espressso,0,nRow*Coffee_Esspresso,0);
+            MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+            MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+            WaitTime 0.23;
+            g_VacuumOn1;
+            MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+            MoveL Espressso,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+            Coffee_Esspresso:=Coffee_Esspresso+1;
+            IF Coffee_Esspresso>5 THEN
+                Coffee_Esspresso:=0;
+            ENDIF
+        ELSEIF order_data="LATTE MACCHIATO" THEN
+            IF pCapsule_Counter=1 THEN
+                homeL30x:=Offs(LatteM,0,nRow*Coffee_LatteMacchiato,0);
+                MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+                WaitTime 0.23;
+                g_VacuumOn1;
+                MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL LatteM,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                pCapsule_Counter:=pCapsule_Counter+1;
+            ELSEIF pCapsule_Counter=2 THEN
+                homeL30x:=Offs(LatteM,0,nRow*(Coffee_LatteMacchiato+3),0);
+                MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+                WaitTime 0.23;
+                g_VacuumOn1;
+                MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL LatteM,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                pCapsule_Counter:=1;
+                Coffee_LatteMacchiato:=Coffee_LatteMacchiato+1;
+                IF Coffee_LatteMacchiato>2 THEN
+                    Coffee_LatteMacchiato:=0;
+                ENDIF
+            ELSE
+                !ERR
+                TPWrite "L:Err on cal.capsulePosition";
+            ENDIF
+
+        ELSEIF order_data="CHOCOCINO" THEN
+            IF pCapsule_Counter=1 THEN
+                homeL30x:=Offs(Chocochino,0,nRow*Coffee_Chococino,0);
+                MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+                WaitTime 0.23;
+                g_VacuumOn1;
+                MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Chocochino,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                pCapsule_Counter:=pCapsule_Counter+1;
+            ELSEIF pCapsule_Counter=2 THEN
+                homeL30x:=Offs(Chocochino,0,nRow*(Coffee_Chococino+3),0);
+                MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+                WaitTime 0.23;
+                g_VacuumOn1;
+                MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Chocochino,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                pCapsule_Counter:=1;
+                Coffee_Chococino:=Coffee_Chococino+1;
+                IF Coffee_Chococino>2 THEN
+                    Coffee_Chococino:=0;
+                ENDIF
+            ELSE
+                !ERR
+                TPWrite "L:Err on cal.capsulePosition";
+            ENDIF
+
+        ELSEIF order_data="GREEN TEA" THEN
+            IF pCapsule_Counter=1 THEN
+                homeL30x:=Offs(Greentea,0,nRow*Coffee_Greentea,0);
+                MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+                WaitTime 0.23;
+                g_VacuumOn1;
+                MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Greentea,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                pCapsule_Counter:=pCapsule_Counter+1;
+            ELSEIF pCapsule_Counter=2 THEN
+                homeL30x:=Offs(Greentea,0,nRow*(Coffee_Greentea+3),0);
+                MoveL homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Offs(homeL30x,0,0,zDiff),v50,z10,Vacuum1L\WObj:=wobj_Capsule;
+                WaitTime 0.23;
+                g_VacuumOn1;
+                MoveJ homeL30x,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                MoveL Greentea,v200,z10,Vacuum1L\WObj:=wobj_Capsule;
+                pCapsule_Counter:=1;
+                Coffee_Greentea:=Coffee_Greentea+1;
+                IF Coffee_Greentea>1 THEN
+                    Coffee_Greentea:=0;
+                ENDIF
+            ELSE
+                !ERR
+                TPWrite "L:Err on cal.capsulePosition";
+            ENDIF
+
+        ELSE
+        ENDIF
+        MoveJ homeL50,v200,z10,Vacuum1L;
+        WaitSyncTask sync2,YuMi_App_task_list;
+        MoveL homeL40,v50,fine,Vacuum1L;
+        WaitTime 0.2;
+        g_VacuumOff1;
+        WaitSyncTask sync3,YuMi_App_task_list;
+        WaitTime 2;
+    ENDPROC
+
+ENDMODULE

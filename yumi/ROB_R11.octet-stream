@@ -1,0 +1,376 @@
+MODULE MainModule
+    !(0)Variable ########################################################
+    PERS bool order:=TRUE;
+    PERS num dCapsule;    
+    PERS string transfer_order;
+    
+    VAR string order_data;
+    
+    VAR num Capsule_Counter;
+    VAR num wLevel;
+    VAR num wCoffee;
+    VAR num CoffeeTime;
+    
+    VAR syncident sync1;
+    VAR syncident sync2;
+    VAR syncident sync3;
+    VAR syncident sync4;
+
+    CONST robtarget homeR:=[[415.51,-125.41,294.61],[0.857846902,-0.268904969,0.43746695,-0.020284898],[1,2,0,1010],[-109.827,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR10:=[[-120.499680054,150.983280375,-214.226253922],[0.510078518,-0.414082667,-0.575248873,-0.487282448],[1,1,1,11],[-119.614,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR20:=[[-25.442271986,151.320034544,-214.842182451],[0.51006885,-0.414086011,-0.575252088,-0.487285932],[1,1,1,11],[-119.614,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR30:=[[403.69,84.03,228.8],[0.562770018,-0.505952016,0.498981016,0.422280014],[1,1,1,1010],[-138.993,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR40:=[[428.35,-336.86,382.08],[0.550582,0.538237,0.628206,0.111882],[0,2,1,11],[-162.372,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR50:=[[42.608571656,118.832049361,-404.073960962],[0.32491243,-0.601234285,-0.681021417,-0.262981134],[1,1,1,11],[-140.943,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR60:=[[-120.780078865,159.843545514,-400.819093223],[0.607474294,-0.686268031,-0.305204142,-0.258576108],[0,2,1,11],[-155.476,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR70:=[[-139.403206466,152.967418185,-330.901572591],[0.678676499,-0.630863523,-0.280952862,-0.249949822],[0,2,1,11],[-148.253,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR80:=[[-116.452658854,163.38253096,-315.415727443],[0.653457276,-0.65785329,-0.249345037,-0.279373744],[0,2,1,11],[-144.491,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR90:=[[-103.282364476,157.974308013,-258.191546623],[0.600871039,-0.550246418,-0.382263632,-0.435955719],[0,2,1,11],[-139.738,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR100:=[[-102.68578129,138.800129027,-331.482525542],[0.493083426,-0.539966467,-0.421708053,-0.536159741],[0,2,1,1010],[-150.88,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR110:=[[401.92,-273.25,329.11],[0.660869,0.203585,0.720771,-0.0479069],[0,2,1,11],[-147.347,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR120:=[[-126.45,143.32,-260.89],[0.825423,-0.000126017,-0.564507,-0.00297761],[1,1,0,11],[-78.1788,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR130:=[[-128.91,140.23,-268.27],[0.83976,-0.0240747,-0.542123,0.0180473],[1,1,0,11],[-78.4285,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR140:=[[-132.73,141.43,-272.84],[0.852253,-0.0145464,-0.522914,0.00364886],[1,1,0,11],[-78.7151,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR150:=[[-135.40,141.95,-276.70],[0.866851,-0.00660665,-0.498484,-0.00630271],[1,1,0,11],[-79.0175,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR160:=[[-139.06,140.48,-282.02],[0.892448,0.00626497,-0.450462,-0.0241265],[1,1,0,11],[-79.3075,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR170:=[[-143.41,139.21,-287.35],[0.907965,0.00372843,-0.417956,-0.0299828],[1,1,0,11],[-79.3179,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR180:=[[-147.72,140.20,-290.27],[0.923237,-0.00734742,-0.383425,-0.0237587],[1,1,0,11],[-79.1187,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR190:=[[-76.211800987,159.02311664,-338.443196408],[0.652188913,-0.625114303,-0.370010372,-0.216734987],[0,2,2,11],[-152.541,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR200:=[[-244.42007189,162.644554214,-289.18766586],[0.920706953,-0.158752936,-0.326383444,0.143422658],[0,3,1,11],[174.006,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR210:=[[-243.421218984,151.89081907,-287.531624399],[0.929779789,-0.163965709,-0.295538584,0.145882606],[0,3,1,11],[171.713,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR220:=[[-242.46,124.84,-284.67],[0.93029,-0.185839,-0.265048,0.172552],[0,3,1,11],[176.97,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR230:=[[-236.54193921,172.428925102,-322.743506064],[0.805707404,-0.446705529,-0.383093473,0.067298888],[0,2,2,11],[-168.458,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR240:=[[-96.87715551,186.517080638,-348.844290875],[0.785416182,-0.540005806,-0.284134826,-0.10383906],[0,2,1,11],[-169.954,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust:=[[-86.712722152,150.66064163,-302.985911312],[0.913849167,-0.048631152,-0.40195183,0.030812937],[1,1,0,11],[-84.7364,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust10:=[[-114.445492575,138.615299802,-302.165676655],[0.87813207,-0.016301336,-0.477850773,0.016642481],[2,1,0,11],[-66.384,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR250:=[[-117.50034416,138.415886016,-230.47266224],[0.726594171,-0.044640784,-0.682466014,-0.065637267],[1,1,1,11],[-109.811,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR260:=[[149.08,34.70,133.93],[0.574763,-0.535364,-0.518008,-0.338675],[1,1,-1,1010],[-131.284,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR270:=[[157.02,36.36,121.91],[0.420698036,-0.575070049,0.489423042,0.502765043],[1,1,1,1010],[-131.544,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR280:=[[-117.30394177,132.85556568,-277.282896845],[0.638573678,-0.054240919,-0.766704576,-0.038022018],[1,1,1,11],[-109.807,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust20:=[[-158.071980746,140.296248691,-297.434319484],[0.940874111,0.00243718,-0.336054393,0.04263112],[1,1,0,11],[-78.3498,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust30:=[[-158.387801161,140.474125096,-301.320759687],[0.940425385,0.001958899,-0.337320654,0.042556248],[1,1,0,11],[-78.3617,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust40:=[[-153.230399827,139.752844477,-294.421081017],[0.924739637,0.020618765,-0.378870044,0.029815431],[1,1,0,11],[-78.9454,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust50:=[[-146.920453147,138.604943261,-290.453387015],[0.899709421,0.026786732,-0.435666604,0.000197921],[1,1,0,11],[-79.2878,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust60:=[[-143.11513684,138.668817202,-286.527258142],[0.86591725,0.056039774,-0.496304212,-0.026999814],[1,1,0,11],[-79.2079,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust70:=[[-139.127173488,139.256396897,-281.907031048],[0.852545285,0.066666069,-0.516427754,-0.044994965],[1,1,0,11],[-79.0696,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust80:=[[-134.915506803,139.709761777,-276.789568393],[0.852780927,0.062757331,-0.515307313,-0.057311255],[1,1,0,11],[-78.9769,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget preWadjust90:=[[-131.390556722,138.489236908,-270.53429494],[0.861920046,0.06806589,-0.49921222,-0.05699148],[1,1,0,11],[-78.907,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR290:=[[-69.938832098,151.634499026,-207.778659938],[0.507143357,-0.417282987,-0.570466978,-0.493201735],[1,1,1,11],[-119.597,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR300:=[[157.62,-107.96,120.61],[0.421199,-0.57471,0.490764,0.501448],[1,1,1,1010],[-131.556,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget homeR310:=[[170.35,-212.37,148.63],[0.508867884,-0.465477894,0.622714858,0.369607916],[0,1,1,1010],[-106.477,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    TASK PERS wobjdata wobj_DG:=[FALSE,TRUE,"",[[276.051,-225.918,41.0823],[0.00768744,0.707042,0.70713,0.000513029]],[[0,0,0],[1,0,0,0]]];
+
+    PROC main()
+        !(1)Initial Condition############################################
+        MoveJ homeR,v50,fine,GripperR;
+        g_Init\Calibrate;
+        g_GripIn\holdForce:=5;
+        g_MoveTo 15;
+        Capsule_Counter:=1;
+        wLevel:=0;
+        wCoffee:=0;
+        CoffeeTime:=56;
+
+        WHILE TRUE DO
+            WHILE order DO
+                order_data:=transfer_order;
+                !(4)Yumi Working ############################################               
+                MoveJ homeR,v50,fine,GripperR;
+                WaitSyncTask sync1,YuMi_App_task_list;
+                FOR i FROM 1 TO dCapsule DO
+                    ![0]Call..........................................
+                    CoverOpen;
+                    WaitTime 0.23;
+
+                    ![1]Call..........................................
+                    SlotOpen;
+                    WaitTime 0.23;
+
+                    ![2]Call..........................................
+                    SlotReject;
+                    WaitTime 0.23;
+
+                    ![3]Call..........WaitSyncTask 2&3................
+                    SlotRecieve;
+                    WaitTime 0.23;
+
+                    ![4]Call..........................................
+                    Slot2Machine;
+                    WaitTime 0.23;
+
+                    ![5]Call..........................................
+                    CoverClose;
+                    WaitTime 0.23;
+                    
+                    ![5.5]Call..........................................
+                    resetWater;
+                    WaitTime 0.23;
+                    
+                    ![6]Call..........................................
+                    wAdjust;
+                    WaitTime 0.23;
+
+                    ![7]Call..........................................
+                    MachineStart;
+                    WaitTime 0.23;
+
+                    !CoffeeTime.......................................
+                    WaitTime CoffeeTime;
+
+                ENDFOR
+                WaitSyncTask sync4,YuMi_App_task_list;
+                order:=FALSE;
+                order_data:="no order";
+                dCapsule:=0;
+
+            ENDWHILE
+        ENDWHILE
+    ENDPROC
+
+    PROC SlotOpen()
+        g_MoveTo 10;
+        MoveJ homeR20,v50,fine,GripperR\WObj:=wobj_DG;
+        MoveL homeR10,v50,fine,GripperR\WObj:=wobj_DG;
+        g_GripIn\holdForce:=20;
+        MoveL homeR20,v50,fine,GripperR\WObj:=wobj_DG;
+    ENDPROC
+
+    PROC SlotReject()
+        MoveJ homeR20,v300,fine,GripperR\WObj:=wobj_DG;
+        MoveJ homeR310, v300, z20, GripperR;
+        MoveJ homeR270, v300, z20, GripperR;
+        MoveJ homeR260, v300, fine, GripperR;
+        MoveJ homeR30,v300,fine,GripperR;
+    ENDPROC
+
+    PROC SlotRecieve()
+        MoveJ homeR30,v50,fine,GripperR;
+        WaitSyncTask sync2,YuMi_App_task_list;
+        WaitSyncTask sync3,YuMi_App_task_list;
+    ENDPROC
+
+    PROC Slot2Machine()
+        MoveJ homeR20,v50,fine,GripperR\WObj:=wobj_DG;
+        MoveL homeR290,v50,fine,GripperR\WObj:=wobj_DG;
+        MoveL homeR10,v50,fine,GripperR\WObj:=wobj_DG;
+        WaitTime 0.2;
+        g_MoveTo 15;
+        MoveL homeR20,v50,fine,GripperR\WObj:=wobj_DG;
+    ENDPROC
+
+    PROC CoverClose()
+        MoveJ homeR50,v1000,fine,GripperR\WObj:=wobj_DG;
+        g_GripIn\holdForce:=10;
+        MoveJ homeR60,v300,fine,GripperR\WObj:=wobj_DG;
+        MoveL homeR70,v1000,fine,GripperR\WObj:=wobj_DG;
+        ContactL homeR80,v100\Zone:=fine,GripperR\WObj:=wobj_DG;
+        ContactL homeR90,v100\Zone:=fine,GripperR\WObj:=wobj_DG;
+        MoveJ homeR100,v300,fine,GripperR\WObj:=wobj_DG;
+        IF Capsule_Counter=1 THEN
+            WaitTime 10;
+        ENDIF
+        MoveJ preWadjust,v1000,z50,GripperR\WObj:=wobj_DG;
+
+    ENDPROC
+
+    PROC CoverOpen()
+        MoveJ homeR20,v50,fine,GripperR\WObj:=wobj_DG;
+        g_GripIn;
+        MoveL homeR250,v50,fine,GripperR\WObj:=wobj_DG;
+        g_GripOut;
+        MoveJ homeR280,v50,fine,GripperR\WObj:=wobj_DG;
+        g_GripIn;
+        MoveJ homeR20,v50,fine,GripperR\WObj:=wobj_DG;
+
+    ENDPROC
+
+    PROC MachineStart()
+        MoveJ homeR190,v50,z30,GripperR\WObj:=wobj_DG;
+        g_GripIn\holdForce:=10;
+        MoveJ homeR240,v50,z30,GripperR\WObj:=wobj_DG;
+        MoveJ homeR200,v50,z30,GripperR\WObj:=wobj_DG;
+        MoveJ homeR210,v50,z30,GripperR\WObj:=wobj_DG;
+        ContactL homeR220,v100\Zone:=fine,GripperR\WObj:=wobj_DG;
+        WaitTime 0.5;
+        MoveJ homeR230,v50,z30,GripperR\WObj:=wobj_DG;
+        MoveJ homeR190,v50,z30,GripperR\WObj:=wobj_DG;
+    ENDPROC
+
+    PROC wAdjust()
+        wLevel:=0;
+        IF order_data="AMERICANO" THEN
+            wCoffee:=6;
+            CoffeeTime:=56;
+        ELSEIF order_data="ESPRESSO" THEN
+            wCoffee:=1;
+            CoffeeTime:=16;
+        ELSEIF order_data="LATTE MACCHIATO" THEN
+            IF Capsule_Counter=1 THEN
+                wCoffee:=4;
+                CoffeeTime:=40;
+                Capsule_Counter:=Capsule_Counter+1;
+            ELSEIF Capsule_Counter=2 THEN
+                wCoffee:=1;
+                CoffeeTime:=16;
+                Capsule_Counter:=1;
+            ELSE
+                TPWrite "ERR/Water Level";
+            ENDIF
+        ELSEIF order_data="CHOCOCINO" THEN
+            IF Capsule_Counter=1 THEN
+                wCoffee:=2;
+                CoffeeTime:=24;
+                Capsule_Counter:=Capsule_Counter+1;
+            ELSEIF Capsule_Counter=2 THEN
+                wCoffee:=2;
+                CoffeeTime:=24;
+                Capsule_Counter:=1;
+            ELSE
+                TPWrite "ERR/Water Level";
+            ENDIF
+        ELSEIF order_data="GREEN TEA" THEN
+            IF Capsule_Counter=1 THEN
+                wCoffee:=2;
+                CoffeeTime:=24;
+                Capsule_Counter:=Capsule_Counter+1;
+            ELSEIF Capsule_Counter=2 THEN
+                wCoffee:=2;
+                CoffeeTime:=24;
+                Capsule_Counter:=1;
+            ELSE
+                TPWrite "ERR/Water Level";
+            ENDIF
+        ELSE
+            !Print Error
+            TPWrite "ERR MAIN-W/Adjust";
+        ENDIF
+        !Move2wLevel
+        MoveJ preWadjust,v1000,z50,GripperR\WObj:=wobj_DG;
+        g_MoveTo 4.5;    
+        
+        
+        IF wLevel=wCoffee THEN
+            TPWrite "wCofee=wLevel";
+        ELSEIF wLevel=0 THEN
+            !Level-0 .........................
+            MoveL homeR120,v50,fine,GripperR\WObj:=wobj_DG;
+            WaitTime 0.12;
+        ELSEIF wLevel=1 THEN
+            !Level-1 .........................
+            MoveL homeR130,v50,fine,GripperR\WObj:=wobj_DG;
+            WaitTime 0.12;
+        ELSEIF wLevel=2 THEN
+            !Level-2 .........................
+            MoveL homeR140,v50,fine,GripperR\WObj:=wobj_DG;
+            WaitTime 0.12;
+        ELSEIF wLevel=3 THEN
+            !Level-3 .........................
+            MoveL homeR150,v50,fine,GripperR\WObj:=wobj_DG;
+            WaitTime 0.12;
+        ELSEIF wLevel=4 THEN
+            !Level-4 .........................
+            MoveL homeR160,v50,fine,GripperR\WObj:=wobj_DG;
+            WaitTime 0.12;
+        ELSEIF wLevel=5 THEN
+            !Level-5 .........................
+            MoveL homeR170,v50,fine,GripperR\WObj:=wobj_DG;
+            WaitTime 0.12;
+        ELSEIF wLevel=6 THEN
+            !Level-6 .........................
+            MoveL homeR180,v50,fine,GripperR\WObj:=wobj_DG;
+            WaitTime 0.12;
+        ELSE
+            !ERROR
+            TPWrite "ERR in Move2Pre-WaterAdjust";
+        ENDIF
+        IF wCoffee-wLevel>0 THEN
+            FOR i FROM wLevel TO wCoffee-1 DO
+                IF i<1 THEN
+                    !Level-1 .........................
+                    MoveL homeR130,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<2 THEN
+                    !Level-2 .........................
+                    MoveL homeR140,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<3 THEN
+                    !Level-3 .........................
+                    MoveL homeR150,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<4 THEN
+                    !Level-4 .........................
+                    MoveL homeR160,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<5 THEN
+                    !Level-5 .........................
+                    MoveL homeR170,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<6 THEN
+                    !Level-6 .........................
+                    MoveL homeR180,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSE
+                    !ERROR
+                    TPWrite "ERR in WaterAdjust Routine";
+                ENDIF
+            ENDFOR
+        ELSEIF wCoffee-wLevel<0 THEN
+            FOR i FROM 6-wLevel TO 5-wCoffee DO
+                IF i<1 THEN
+                    !Level-5 .........................
+                    MoveL homeR170,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<2 THEN
+                    !Level-4 .........................
+                    MoveL homeR160,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<3 THEN
+                    !Level-3 .........................
+                    MoveL homeR150,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<4 THEN
+                    !Level-2 .........................
+                    MoveL homeR140,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<5 THEN
+                    !Level-1 .........................
+                    MoveL homeR130,v50,fine,GripperR\WObj:=wobj_DG;
+                    WaitTime 0.15;
+                ELSEIF i<6 THEN
+                    !Level-0 .........................
+                    MoveL homeR120,v50,fine,GripperR\WObj:=wobj_DG;
+                ELSE
+                    !ERROR
+                    TPWrite "ERR in WaterAdjust Routine";
+                ENDIF
+            ENDFOR
+        ELSEIF wCoffee=wLevel THEN
+            !not working                    
+        ELSE
+        ENDIF      
+        MoveL preWadjust10,v1000,z50,GripperR\WObj:=wobj_DG;
+        !Update wLevel
+        wLevel:=wCoffee;
+        WaitTime 0.23;
+        MoveJ homeR190,v50,fine,GripperR\WObj:=wobj_DG;
+    ENDPROC
+    
+    PROC resetWater()
+        WaitTime 2;
+        MoveJ preWadjust,v1000,z50,GripperR\WObj:=wobj_DG;
+        g_GripIn;
+        MoveJ preWadjust30,v1000,z50,GripperR\WObj:=wobj_DG;
+        MoveJ preWadjust20,v1000,z50,GripperR\WObj:=wobj_DG;
+        MoveL preWadjust40,v1000,z50,GripperR\WObj:=wobj_DG;
+        MoveL preWadjust50,v1000,z50,GripperR\WObj:=wobj_DG;
+        MoveL preWadjust60,v1000,z50,GripperR\WObj:=wobj_DG;
+        MoveL preWadjust70,v1000,z50,GripperR\WObj:=wobj_DG;
+        MoveL preWadjust80,v1000,z50,GripperR\WObj:=wobj_DG;
+        MoveL preWadjust90,v1000,z50,GripperR\WObj:=wobj_DG; 
+        
+        
+        MoveJ preWadjust,v1000,z50,GripperR\WObj:=wobj_DG;
+    ENDPROC
+
+
+ENDMODULE
