@@ -4,6 +4,8 @@ About the LINE Messaging API
 See the official API documentation for more information.
 > **English** : https://developers.line.me/en/docs/
 
+![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+
 
 Documents
 ===================
@@ -66,13 +68,15 @@ LINEBot #replyMessage() takes the reply token and MessageBuilder.
 The method sends a message that is built by MessageBuilder to the destination.
 
 
-##Push Code to Heroku
+Heroku
 -----
 
 Install the Heroku CLI
 -----
 >https://devcenter.heroku.com/articles/heroku-cli
 
+Push Code to 
+-----
 If you haven't already, log in to your Heroku account and follow the prompts to create a new SSH public key.
 
 >$ heroku login
